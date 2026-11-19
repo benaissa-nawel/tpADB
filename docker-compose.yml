@@ -1,0 +1,42 @@
+services:
+  oracle-db:
+    image: container-registry.oracle.com/database/free:latest
+    container_name: oracle_bda
+    restart: unless-stopped
+    environment:
+      - ORACLE_PWD=OracleAdmin2026!
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+
+  neo4j-db:
+    image: neo4j:5-community
+    container_name: neo4j_bda
+    restart: unless-stopped
+    environment:
+      - NEO4J_AUTH=neo4j/Neo4jAdmin2026!
+      - NEO4J_server_memory_heap_initial__size=512m
+      - NEO4J_server_memory_heap_max__size=1024m
+      - NEO4J_server_memory_pagecache_size=512m
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/var/lib/neo4j/import
+    deploy:
+      resources:
+        limits:
+          memory: 1536M
+
+volumes:
+  oracle_data:
+  neo4j_data:
+  neo4j_logs:
+  neo4j_import:
